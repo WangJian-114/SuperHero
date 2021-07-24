@@ -1,24 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
+import AuthState from './context/auth/authState';
+import HeroState from './context/hero/heroState';
+import TeamState from './context/team/teamState';
+
+import Login from './pages/auth/Login';
+import Search from './pages/search/Search';
+import MyTeam from './pages/team/Myteam';
+import HeroDetail from './pages/hero/HeroDetail';
+
+import PrivateRoute from './routes/PrivateRoute';
+
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthState>
+      <HeroState>
+        <TeamState>
+          <Router>
+            <Switch>
+              <Route exact path="/login" component={Login} />
+              <PrivateRoute exact path="/" component={MyTeam} />
+              <PrivateRoute exact path="/search" component={Search} />
+              <PrivateRoute 
+                exact 
+                path="/hero/:id" 
+                component={(props) => {
+                  const id = props.match.params.id;
+                return <HeroDetail id={id}/>}}/>
+            </Switch>
+          </Router>
+        </TeamState>
+      </HeroState>
+    </AuthState>
   );
 }
 
